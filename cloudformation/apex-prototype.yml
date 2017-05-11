@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Apex Prototype Demo Roles"
+Resources:
+  ### DynamoDB Table of all users
+  ApexPrototypeTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+      -
+        AttributeName: "MessageId"
+        AttributeType: "S"
+      KeySchema:
+      -
+        AttributeName: "MessageId"
+        KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+  ApexPrototypeExecution:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      RoleName: apex-prototype-execution
+      Path: "/"
+      Policies:
+        -
+          PolicyName: "invoke-additional-functions"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "lambda:InvokeFunction"
+                Resource: "arn:aws:lambda:*:*:function:apex_prototype_*"
+        -
+          PolicyName: "log-to-cloudwatch"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "logs:*"
+                Resource: "*""
+  ApexPrototypeExecutionwithData:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      RoleName: apex-prototype-execution-with-data
+      Path: "/"
+      Policies:
+        -
+          PolicyName: "write-to-dynamo"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "dynamodb:*"
+                Resource: "arn:aws:dynamodb:*:*:table/apex-prototype*"
+        -
+          PolicyName: "invoke-additional-functions"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "lambda:InvokeFunction"
+                Resource: "arn:aws:lambda:*:*:function:apex_prototype_*"
+        -
+          PolicyName: "log-to-cloudwatch"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: "logs:*"
+                Resource: "*""

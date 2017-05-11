@@ -1,0 +1,8 @@
+{
+  "name": "apex_prototype",
+  "description": "A prototype of what is possible with apex.",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::656532927350:role/apex_prototype_lambda_function",
+  "environment": {}
+}

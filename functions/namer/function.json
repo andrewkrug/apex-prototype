@@ -1,0 +1,8 @@
+{ "runtime": "python3.6",
+  "handler": "namer.handle",
+  "description": "Example with python dependency on an external package",
+  "role": "arn:aws:iam::656532927350:role/apex-prototype-execution-with-data",
+  "hooks":{
+    "build": "pip install -r requirements.txt -t ."
+  }
+}
